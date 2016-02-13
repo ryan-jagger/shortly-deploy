@@ -2,8 +2,13 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    concat: {
+    concat:{
+      dist:{
+        src:['public/client/**.js'],
+        dest: 'public/dist/concat.js'
+      }
     },
+
 
     mochaTest: {
       test: {
@@ -21,10 +26,16 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      dist:{
+        src:['public/dist/concat.js'],
+        dest: 'public/dist/ugly.js'
+      }
     },
 
     jshint: {
       files: [
+        'public/client/fail.js',
+        'index.js',
         // Add filespec list here
       ],
       options: {
@@ -94,6 +105,9 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
+    'jshint',
+    'concat:dist',
+    'uglify:dist',
   ]);
 
   grunt.registerTask('upload', function(n) {
@@ -105,7 +119,8 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('deploy', [
-
+    'test',
+    'build'
   ]);
 
 
